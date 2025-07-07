@@ -12,16 +12,16 @@ while current_date <= end_date:
     # Remove duplicate rows in dataframe
     df = df.drop_duplicates()
     # Find unique prefixes that the scrubber comes as a transit provider
-df2 = df.loc[df['provider'] == scrubber]
-unique_prefixes = df2["prefix"].unique()
+    df2 = df.loc[df['provider'] == scrubber]
+    unique_prefixes = df2["prefix"].unique()
 
-# Convert the numpy array of unique values to a DataFrame
-unique_prefixes_df = pd.DataFrame(unique_prefixes, columns=['prefix'])
-unique_prefixes_df['time'] = date_str
+    # Convert the numpy array of unique values to a DataFrame
+    unique_prefixes_df = pd.DataFrame(unique_prefixes, columns=['prefix'])
+    unique_prefixes_df['time'] = date_str
 
-# Save the unique values to a CSV file
-unique_prefixes_df.to_csv(path + 'as_' + scrubber + '_transited_prefix_' + date_str + '.csv', index=False)
+    # Save the unique values to a CSV file
+    unique_prefixes_df.to_csv(path + 'as_' + scrubber + '_transited_prefix_' + date_str + '.csv', index=False)
 
-print(f"Done for {date_str}.")
-current_date += timedelta(days=1)
+    print(f"Done for {date_str}.")
+    current_date += timedelta(days=1)
 
