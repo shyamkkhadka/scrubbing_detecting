@@ -20,7 +20,9 @@ AS45474,NEXUSGUARD LIMITED (FOrtinet partners with this).
 AS200020,Stichting NBIP-NaWas
 AS42649,Baffin Bay Networks AB
 AS59796,StormWall s.r.o.
-AS5405,Inter.link GmbH
 AS20052, Arbor networks (Netscout)
-AS 394009,
+AS 394009, A10 Networks
 AS 401073, A10 Networks
+AS5405,Inter.link GmbH
+AS 5405 does not seem to be scrubbing because I found a case where a protected AS changed its upstream from this AS to AS 199524.
+
