@@ -1,11 +1,0 @@
---2025-07-15 17:06:48--  https://stat.ripe.net/data/bgp-updates/data.json?resource=212.70.48.0%2F24
-Resolving stat.ripe.net (stat.ripe.net)... 2001:67c:2e8:22::c100:696, 193.0.6.150
-Connecting to stat.ripe.net (stat.ripe.net)|2001:67c:2e8:22::c100:696|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 487770 (476K) [application/json]
-Saving to: ‘data.json?resource=212.70.48.0%2F24’
-
-              data.json?reso   0%[                                              ]       0  --.-KB/s               data.json?resource=212.70.48 100%[=============================================>] 476.34K  --.-KB/s    in 0.07s   
-
-2025-07-15 17:06:48 (6.33 MB/s) - ‘data.json?resource=212.70.48.0%2F24’ saved [487770/487770]
-
