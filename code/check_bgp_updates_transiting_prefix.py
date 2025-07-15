@@ -1,5 +1,6 @@
+# Code to find the new prefixes that have different upstream than a scrubber in a day
 # Check every 5 minutes BGP updates to see how many new prefixes were announced by a scrubber.
-# 1. Find new prefixes originated. NOTE: Code borrowed from github_attack_2018.ipynb.
+# Step 1: Find new prefixes transited.
 import pybgpstream
 import pandas as pd
 from datetime import datetime, timedelta, date
@@ -7,9 +8,7 @@ import csv
 import os
 import re
 
-from more_itertools.more import first
-
-scrubber = "13335"
+scrubber = "32787"
 mon = "may"
 year = "2025"
 
@@ -17,8 +16,8 @@ year = "2025"
 # , "2025-09-01", "2024-09-09", "2024-09-15", "2024-02-22", "2024-02-29"] # For update files
 
 # Generate list of date strings for May 2025
-start_date = date(2025, 5, 18)
-end_date = date(2025, 5, 31)
+start_date = date(2025, 5, 1)
+end_date = date(2025, 5, 1)
 
 dates = []
 current_date = start_date
@@ -30,7 +29,8 @@ INTERVAL_MINUTES = 60
 path = "/data/shared_dir/scrubber_activation/as" + scrubber + "_" + mon + "_" + year + "/"
 
 for date in dates:
-    df = pd.read_csv(path + "as_" + scrubber + "_originated_prefix_" + date + ".csv")
+
+    df = pd.read_csv(path + "as_" + scrubber + "_transited_prefix_" + date + ".csv")
     prefixes = df["prefix"]
     update_time = []
 
@@ -53,7 +53,7 @@ for date in dates:
             until_time=until_time,
             record_type="updates",
             project="ris",
-            filter="path _" + scrubber + "$"
+            filter="path _" + scrubber + "_"
         )
 
         # stream.set_data_interface_option("broker", "cache-dir", "/home/shyam/jupy/cache")
@@ -80,22 +80,16 @@ for date in dates:
 
                 # Convert UTC datetime to string
                 time_utc_str = time_utc.strftime("%Y-%m-%d %H:%M:%S")
-
-                # Store the first time seen by a collector
-                if not asn_time["first_time_utc_str"]:
-                    asn_time["first_time_utc_str"] = time_utc_str
-
-                # It stores the last time seen by a collector.
                 asn_time["time_utc_str"] = time_utc_str
                 asn_time["prefix"] = pfx
 
                 prefix_details.append(asn_time)
 
                 #     print("\n Finding new prefixes announced during that time")
-        csv_file = path + 'as_' + scrubber + '_originated_prefix_' + date + '_' + str(
+        csv_file = path + 'as_' + scrubber + '_transited_prefix_' + date + '_' + str(
             until_time) + '.csv'  # Output file to store
 
-        df = pd.read_csv(path + 'as_' + scrubber + '_originated_prefix_' + date + '.csv')
+        df = pd.read_csv(path + 'as_' + scrubber + '_transited_prefix_' + date + '.csv')
         prefixes_original = set(df["prefix"])  # Previously presented prefixes
 
         # Dictionary to hold unique prefixes with their first timestamp
@@ -104,26 +98,25 @@ for date in dates:
         for entry in prefix_details:
             prefix = entry['prefix']
             timestamp = entry['time_utc_str']
-            first_timestamp = entry['first_time_utc_str']
             if prefix not in unique_prefixes and prefix not in prefixes_original:  # Store prefix if it is unique and not stored in previous timestamp.
-                unique_prefixes[prefix] = (timestamp, first_timestamp)
+                unique_prefixes[prefix] = timestamp
 
         # print("Unique prefixes are %s" %unique_prefixes)
         # Write to CSV if we find new prefix origniated from the scrubber
         if len(unique_prefixes) != 0:
             with open(csv_file, 'w', newline='') as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerow(['prefix', 'time_utc_str', 'first_time_utc_str'])  # Header
-                for prefix, (timestamp, first_timestamp) in unique_prefixes.items():
-                    writer.writerow([prefix, timestamp, first_timestamp])
-            print(f"Data has been written to {csv_file} with number of new originated prefixes {len(unique_prefixes)}")
+                writer.writerow(['prefix', 'time_utc_str'])  # Header
+                for prefix, timestamp in unique_prefixes.items():
+                    writer.writerow([prefix, timestamp])
+            print(f"Data has been written to {csv_file} with number of new transited prefixes {len(unique_prefixes)}")
         print("Checked until %s" % until_time)
         current_time += interval  # Update time by interval
     print("Completed for %s." % date)
 
     # Now storing only the unique prefixes in a file
     print("Merging all the unique prefixes on %s in a single file.." % date)
-    pattern = r"as_" + scrubber + "_originated_prefix_" + date + "_(\d)+.csv$"
+    pattern = r"as_" + scrubber + "_transited_prefix_" + date + "_(\d)+.csv$"
 
     # List to hold dataframes
     dfs = []
@@ -137,10 +130,8 @@ for date in dates:
 
             # Concatenate all DataFrames into a single one
             merged_df = pd.concat(dfs, ignore_index=True)
-            merged_df.to_csv(path + 'as_' + scrubber + '_originated_prefix_merged_' + date + '.csv', index=False)
+            merged_df.to_csv(path + 'as_' + scrubber + '_transited_prefix_merged_' + date + '.csv', index=False)
             unique_merged_prefixes = merged_df["prefix"].unique()
-            unique_merged_prefixes.to_csv(path + 'as_' + scrubber + '_originated_prefix_merged_unique' + date + '.csv', index=False)
-
             print("Saved to a file with number of new prefixes on %s are %s and are %s" % (date,
                                                                                            len(unique_merged_prefixes),
                                                                                            unique_merged_prefixes))
