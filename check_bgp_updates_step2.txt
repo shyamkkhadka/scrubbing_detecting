@@ -1,0 +1,5 @@
+nohup: ignoring input
+WARN: INVALID_MSG: Unexpected ADD-PATH OPEN Capability length (8), expecting 4 bytes (parsebgp_bgp_open.c:86)
+WARN: INVALID_MSG: Unexpected ADD-PATH OPEN Capability length (8), expecting 4 bytes (parsebgp_bgp_open.c:86)
+WARN: INVALID_MSG: Unexpected ADD-PATH OPEN Capability length (8), expecting 4 bytes (parsebgp_bgp_open.c:86)
+WARN: INVALID_MSG: Unexpected ADD-PATH OPEN Capability length (8), expecting 4 bytes (parsebgp_bgp_open.c:86)
