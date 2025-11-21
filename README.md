@@ -1,5 +1,5 @@
 # Artifacts of the paper "Detecting and Characterizing DDoS Scrubbing from Global BGP Routing: Insights from Five Leading Scrubbers" accepted in Passive and Active Measurement Conference (PAM) 2026.
-## File descriptions inside code directory
+## Descripiton of main files
 - always-on.ipynb: Find always-on protected prefixes.
 - bogons.ipynb: Check bogons from team-cymru.
 - check_bgp_updates_step2.py: Checks how many new prefixes were announced by a scrubber.
