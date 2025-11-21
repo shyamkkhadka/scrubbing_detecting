@@ -1,5 +1,5 @@
 # Artifacts of the paper "Detecting and Characterizing DDoS Scrubbing from Global BGP Routing: Insights from Five Leading Scrubbers" accepted in Passive and Active Measurement Conference (PAM) 2026.
-## Descripiton of main files
+## Description of main files
 - step1_process_raw_bgp_data.py: Find origin, provider, prefix, its length and version from raw data generated using bgpreader.
 - step2_check_bgp_updates.py: Checks how many new prefixes were announced by a scrubber.
 - step3_find_unique_prefix.py: Merge each time slots originated prefixes into one.
